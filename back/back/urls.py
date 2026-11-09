@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from back.back_progress.views import get_csrf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/get_csrf/', get_csrf),
 ]
