@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - "5432:5432"
+
+    environment:
+       POSTGRES_DB: "app_progress"
+       POSTGRES_USER: "postgres"
+       POSTGRES_PASSWORD: "postgres"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app_progress"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  back:
+    build: ./back
+    env_file:
+      - ./back/.env
+    volumes:
+      - type: bind
+        source: ./back
+        target: /app
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+  
+
+  front:
+    build: ./front
+    volumes:
+      - ./front:/app
+      - front_node_modules:/app/node_modules
+    
+    ports:
+      - "4200:4200"
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    
+    ports:
+      - "8080:80"
+    
+    environment:
+      - NGINX_PORT=80
+
+    depends_on:
+      - back
+      - front
+
+volumes:
+  postgres_data:
+  front_node_modules:
