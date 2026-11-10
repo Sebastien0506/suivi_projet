@@ -10,6 +10,7 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from django.contrib.auth import authenticate
+
 #On crée le jeton csrf
 @ensure_csrf_cookie
 def get_csrf(request) :
