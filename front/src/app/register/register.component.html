@@ -1,0 +1,25 @@
+<div class="pageInscription">
+    <form class="form" (ngSubmit)="sendRequest()">
+        <h6>Inscription</h6>
+            <mat-form-field>
+                <mat-label>Nom</mat-label>
+                <input type="text" matInput [formControl]="usernameInput">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Prénom</mat-label>
+                <input type="text" matInput [formControl]="lastnameInput">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input type="text" matInput [formControl]="emailInput">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input type="password" matInput [formControl]="passwordInput">
+            </mat-form-field>
+            <button mat-raised-button type="submit">Inscription</button>
+        
+        
+    </form>
+</div>
+

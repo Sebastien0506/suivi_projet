@@ -1,0 +1,10 @@
+<mat-toolbar>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with meu icon" [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openDialogConnexion()">Connexion</button>
+            <button mat-menu-item (click)="openDialogRegister()">Inscription</button>
+        </mat-menu>
+    </button>
+    <span>My App</span>
+</mat-toolbar>

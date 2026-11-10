@@ -1,0 +1,21 @@
+.pageConnexion{
+    width: 100%;
+    margin: auto;
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form{
+    background-color: whitesmoke;
+    width: 80%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5%;
+    box-shadow: 2px 2px 2px 2px gray;
+}
