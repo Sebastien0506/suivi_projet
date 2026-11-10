@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from back.back_progress.views import get_csrf, register
+from back.back_progress.views import get_csrf, register, login
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView
@@ -28,4 +28,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/get_csrf/', get_csrf),
     path('api/register/', register),
+    path('api/login/', login),
 ]

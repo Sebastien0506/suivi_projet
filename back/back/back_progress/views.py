@@ -5,10 +5,11 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.response import Response
-from back.back_progress.services.serializer import UserSerializer
+from back.back_progress.services.serializer import UserSerializer, LoginSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from django.contrib.auth import authenticate
 #On crée le jeton csrf
 @ensure_csrf_cookie
 def get_csrf(request) :
@@ -86,6 +87,74 @@ def register(request) :
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
     )
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def login(request) :
+
+    #On récupère les données
+    email: str = request.data.get("email")
+    password: str = request.data.get("password")
+
+    #On vérifie que les champs email et password sont bien présent
+    if not email or not password :
+        return Response(
+            {"error": "Un champs est manquant."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    #On initialise le serializer
+    serializer = LoginSerializer(data={"email": email, "password": password})
+
+    if not serializer.is_valid():
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    #On identifie l'utilisateur
+    user = authenticate(
+         request,
+         email=email,
+         password=password
+    )
+
+    #Si aucun utilisateur
+    if user is None :
+        return Response(
+            {"error" : "Email ou mot de passe incorrect"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    #On génère le token
+    token = get_token_for_user(user)
+
+    #On envoi la reponse
+    response = Response(
+        {
+            "success": "Connexion réussie"
+            
+        },
+        status=status.HTTP_200_OK
+    )
+    response.set_cookie(
+        key="access_token",
+        value=token["access"],
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=300,
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=token["refresh"],
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=300
+    )
+
+    return response
+
 
 
 

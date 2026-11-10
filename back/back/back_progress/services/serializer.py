@@ -79,3 +79,21 @@ class UserSerializer(serializers.ModelSerializer) :
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class LoginSerializer(serializers.Serializer) :
+    
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    
+    
+    def validate_email(self, value) :
+        return
+    
+    def validate_password(self, value) :
+        if not value:
+            raise serializers.ValidationError(
+                "Le mot de passe est obligatoire."
+            )
+        return value
+        
