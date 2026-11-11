@@ -1,15 +1,15 @@
 from django.shortcuts import render
 from django.middleware.csrf import get_token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.response import Response
 from back.back_progress.services.serializer import UserSerializer, LoginSerializer
-from rest_framework_simplejwt.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework import status
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -32,6 +32,27 @@ def get_token_for_user(user) :
         'refresh': str(refresh),
         'access' : str(refresh.access_token)
     }
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def check_login(request) :
+    token = request.COOKIES.get("access_token")
+
+    if not token :
+        return Response({"isLogged": False})
+    
+    try :
+        validated_token = AccessToken(token)
+
+        user_id = validated_token["user_id"]
+        User = get_user_model()
+
+        is_logged = User.objects.filter(pk=user_id, is_active=True).exists()
+
+        return Response({"isLogged": is_logged})
+    except (TokenError, KeyError) :
+        return Response({"isLogged": False})
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -160,6 +181,39 @@ def login(request) :
     )
 
     return response
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def logout(request) :
+
+    #On récupère le refresh_token dans la requête
+    refresh_token = request.COOKIES.get("refresh_token")
+
+    #Si aucun refresh_token est présent on envoi un message d'erreur
+    if refresh_token :
+        try :
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+        except TokenError :
+            pass
+
+        #On envoi la réponse
+        response = Response(
+            {
+                "message" : "Déconnexion réussie"
+            },
+            status=status.HTTP_200_OK
+        )
+        #On les supprime aussi dans le navigateur
+        response.delete_cookie("access_token", path="/")
+        response.delete_cookie("refresh_token", path="/")
+
+        return response
+
+    
+
+
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs) :

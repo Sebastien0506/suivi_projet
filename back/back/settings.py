@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'back.back_progress',
     'django.contrib.admin',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
     'django.contrib.auth',
     'rest_framework',
     'django_rest_passwordreset',

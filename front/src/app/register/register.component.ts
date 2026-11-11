@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoggedService } from '../logged.service';
+import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -14,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class RegisterComponent {
 
-  constructor(private registerService: RegisterService) {}
+  constructor(private registerService: RegisterService, private logged: LoggedService) {}
 
   //On initialise un message d'erreur
   errorMessage = signal("");
@@ -26,6 +28,8 @@ export class RegisterComponent {
   lastnameInput = new FormControl("");
   emailInput = new FormControl("");
   passwordInput = new FormControl("");
+
+  dialogRef = inject(MatDialogRef);
 
   private snackBar = inject(MatSnackBar);
 
@@ -176,6 +180,7 @@ export class RegisterComponent {
     //On envoi la requête
     this.registerService.sendRequestRegister(data).subscribe({
       next: (res) => {
+        this.logged.isLogged.set(true);
         this.successMessage.set(res.success ?? '');
         this.snackBar.open(
           this.successMessage(),
@@ -184,6 +189,7 @@ export class RegisterComponent {
             duration: 3000
           }
         )
+        this.dialogRef.close();
       },
       error: (err) => {
         console.error("Erreur HTTP :", err.status);

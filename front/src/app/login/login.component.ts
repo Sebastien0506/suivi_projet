@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
+import { LoggedService } from '../logged.service';
 
 
 @Component({
@@ -16,10 +18,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-    constructor(private LoginService: LoginService){}
+    constructor(private LoginService: LoginService, private logged: LoggedService){}
 
     emailInput = new FormControl("");
     passwordInput = new FormControl("");
+
+    dialoRef = inject(MatDialogRef);
 
     errorMessage = signal("");
     successMessage = signal("");
@@ -137,6 +141,7 @@ export class LoginComponent {
       this.LoginService.sendRequestLogin(data).subscribe({
         next: (res) => {
           console.log("Connexion Réussie")
+          this.logged.isLogged.set(true);
           this.successMessage.set(res.success ?? '');
           this.snackBar.open(
             this.successMessage(),
@@ -145,6 +150,7 @@ export class LoginComponent {
               duration: 3000
             }
           )
+          this.dialoRef.close();
         },
         error: (err) => {
           console.error("Erreur lors de la connexion");
