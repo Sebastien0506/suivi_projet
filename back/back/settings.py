@@ -25,14 +25,34 @@ SECRET_KEY = 'django-insecure-t0z9%k*r(#xr^7!ur9&8sa)t$-z^azq=v9a@+rhsr8)nkon-to
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1"
+]
+CSRF_TRUSTED_ORIGINS=[
+    "http://localhost:8080"
+]
+CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8080"
+]
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '91c50dc4ee469e'
+EMAIL_HOST_PASSWORD = '8a85d77e584124'
+EMAIL_PORT = '2525'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'back.back_progress',
     'django.contrib.admin',
+    'corsheaders',
     'django.contrib.auth',
+    'rest_framework',
+    'django_rest_passwordreset',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -42,6 +62,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -103,6 +124,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        "back.back_progress.authentication.CookieJWTAuthentication",
+    )
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -120,6 +146,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = "back_progress.User"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
