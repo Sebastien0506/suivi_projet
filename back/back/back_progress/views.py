@@ -10,6 +10,11 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from django.contrib.auth import authenticate
+from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
 
 #On crée le jeton csrf
 @ensure_csrf_cookie
@@ -155,6 +160,35 @@ def login(request) :
     )
 
     return response
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs) :
+
+    context = {
+        'current_user': reset_password_token.user,
+        'username' : reset_password_token.user.username,
+        'email' : reset_password_token.user.email,
+        'reset_password_url': (
+            f"http://localhost:8080/reset_password"
+            f"?token={reset_password_token.key}"
+        )
+    }
+
+    email_html_message = render_to_string('email/user_reset_password.html', context)
+    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    msg = EmailMultiAlternatives(
+        "Password Reset for {title}".format(title="Some website title"),
+        #Message
+        email_plaintext_message,
+        #From
+        "noreply@somehost.local",
+        #to:
+        [reset_password_token.user.email]
+    )
+
+    msg.attach_alternative(email_html_message, "text/html")
+    msg.send()
 
 
 

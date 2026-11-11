@@ -29,7 +29,9 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1"
 ]
-
+CSRF_TRUSTED_ORIGINS=[
+    "http://localhost:8080"
+]
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
@@ -37,6 +39,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080"
 ]
 
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '91c50dc4ee469e'
+EMAIL_HOST_PASSWORD = '8a85d77e584124'
+EMAIL_PORT = '2525'
 
 # Application definition
 
@@ -45,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'corsheaders',
     'django.contrib.auth',
+    'rest_framework',
+    'django_rest_passwordreset',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',

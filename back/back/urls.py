@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from back.back_progress.views import get_csrf, register, login
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -29,4 +29,5 @@ urlpatterns = [
     path('api/get_csrf/', get_csrf),
     path('api/register/', register),
     path('api/login/', login),
+    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace="password_reset")),
 ]

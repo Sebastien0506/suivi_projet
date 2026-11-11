@@ -6,16 +6,26 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    
 }
 
-.form{
-    background-color: whitesmoke;
+.card_form {
+    background-color:whitesmoke;
     width: 80%;
-    height: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 5%;
+    margin: auto;
     box-shadow: 2px 2px 2px 2px gray;
+    border-radius: 5%;
+}
+.form{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
 }
