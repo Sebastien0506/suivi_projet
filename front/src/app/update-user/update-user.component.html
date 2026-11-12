@@ -1,0 +1,50 @@
+<div class="pageUpdateUser">
+
+    <h6 mat-dialog-title>Modifier mon profil</h6>
+  
+    <mat-dialog-content>
+      <form class="updateForm" id="updateForm" (ngSubmit)="sendRequest()">
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControl]="username"
+            [value]="user.userData.username"
+          >
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Prénom</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControl]="lastName"
+          >
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Adresse e-mail</mat-label>
+          <input
+            matInput
+            type="email"
+            [formControl]="email"
+          >
+        </mat-form-field>
+  
+      </form>
+    </mat-dialog-content>
+  
+    <mat-dialog-actions align="end">
+      <button mat-raised-button mat-dialog-close (click)="closeDialog()">
+        Annuler
+      </button>
+  
+      <button mat-raised-button type="submit" form="updateForm">
+        Enregistrer
+      </button>
+    </mat-dialog-actions>
+  
+  </div>
+

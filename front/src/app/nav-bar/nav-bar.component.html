@@ -4,6 +4,7 @@
         <mat-menu #menu="matMenu">
             @if(logged.isLogged()){
                 <button mat-menu-item (click)="sendRequestLogout()">Déconnexion</button>
+                <button mat-menu-item routerLink="/userProfile">Mon Profil</button>
             } @else {
                 <button mat-menu-item (click)="openDialogConnexion()">Connexion</button>
                 <button mat-menu-item (click)="openDialogRegister()">Inscription</button>

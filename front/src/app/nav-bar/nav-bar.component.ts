@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../login/login.component';
 import { RegisterComponent } from '../register/register.component';
 import { LoggedService } from '../logged.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NavBarService } from './nav-bar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [MatToolbarModule, MatIconModule, MatButtonModule, MatMenuModule],
+  imports: [MatToolbarModule, MatIconModule, MatButtonModule, MatMenuModule, RouterLink],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.css'
 })

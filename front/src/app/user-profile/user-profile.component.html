@@ -1,0 +1,29 @@
+<div class="pageInfoUser">
+    <h1>Mon profil</h1>
+  
+    <!-- @for (infoUser of userInfo; track infoUser.id) { -->
+      <div class="profileCard">
+        <div class="profileHeader">
+          <mat-icon>account_circle</mat-icon>
+          <h2>{{ userInfo?.username }} {{ userInfo?.last_name }}</h2>
+        </div>
+  
+        <div class="profileField">
+          <span>Prénom</span>
+          <p>{{ userInfo?.username}}</p>
+        </div>
+  
+        <div class="profileField">
+          <span>Nom</span>
+          <p>{{ userInfo?.last_name}}</p>
+        </div>
+  
+        <div class="profileField">
+          <span>Adresse e-mail</span>
+          <p>{{ userInfo?.email }}</p>
+        </div>
+  
+        <button mat-raised-button (click)="openDialogUpdateUser()">Modifier le profil</button>
+      </div>
+    <!-- } -->
+  </div>

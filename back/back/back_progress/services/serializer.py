@@ -97,3 +97,43 @@ class LoginSerializer(serializers.Serializer) :
             )
         return value
         
+class UpdateUserSerializer(serializers.ModelSerializer) :
+    class Meta:
+        model = User
+        fields = ["username", "last_name", "email"]
+
+    def validate_username(self, value) :
+        #On vérifie que le username ne contient pas de caractères non autorisée
+        if not all(char.isalpha() or char in ["-", " "] for char in value) :
+            raise serializers.ValidationError("Le champs 'Nom' contient des caractères non autorisée")
+        
+        return value
+    
+    def validate_last_name(self, value) :
+        #On vérifie que le champ lastname ne contien tpas des caratères non autorisée
+        if not all(char.isalpha() or char in ["-", " "] for char in value) :
+            raise serializers.ValidationError("Le champ 'Prénom' contient des caractère non autorisée")
+        
+        return value
+
+    def validate_email(self, value) :
+        #On récupère la chaine de caractères avant le arobase
+        beforarobase = value.split("@")[0]
+
+        #On vérifie que la chaine avant le arobase ne contient pas de caractères interdit
+        if not all(char.isalnum() or char in [".", "-", "_"] for char in beforarobase) :
+            raise serializers.ValidationError("La chaine avant le arobase contient des caractères non autorisée")
+        
+        #On récupère la chaine de caractères apres le arobase
+        afterarobase = value.split("@")[1]
+
+        if not all(char.isalnum() or char in [".", "-", "_"] for char in afterarobase): 
+            raise serializers.ValidationError("La chaine apres le arobase contient des caractères non autorisée")
+        
+        return value
+    
+    
+    
+
+
+        
