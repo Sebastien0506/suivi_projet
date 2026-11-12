@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from back.back_progress.views import get_csrf, register, login, check_login, logout
+from back.back_progress.views import get_csrf, register, login, check_login, logout, me, update_user
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView
@@ -32,4 +32,6 @@ urlpatterns = [
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace="password_reset")),
     path('api/check_login/', check_login),
     path('api/logout/', logout),
+    path('api/me/', me),
+    path('api/update_user/', update_user),
 ]

@@ -5,7 +5,8 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.response import Response
-from back.back_progress.services.serializer import UserSerializer, LoginSerializer
+from back.back_progress.models import User
+from back.back_progress.services.serializer import UserSerializer, LoginSerializer, UpdateUserSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework import status
@@ -243,6 +244,62 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+
+#View pour récupérer les informations de l'utilisateur
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def me(request) :
+    #on récupère l'utilisateur depuis la requête
+    user = request.user
+    #Si aucun user on renvoi un message d'erreur
+    if not user :
+        return Response(
+            {
+                "error" : "Impossible de récupérer les données utilisateurs"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    #Si on trouve le user on renvoi la reponse
+    return Response({
+        "id": user.id,
+        "username": user.username,
+        "last_name": user.last_name,
+        "email": user.email
+    })
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_user(request) :
+
+    #On initialise le serializer
+    serializer = UpdateUserSerializer(request.user, data=request.data, partial=True)
+
+    #Si le serializer n'est pas valide on renvoi un message d'erreur
+    if not serializer.is_valid() :
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try : 
+        serializer.save()
+
+        return Response(
+            {
+                "success" : "Données modifier avec succès."
+            },
+            status=status.HTTP_200_OK
+        )
+    except Exception as e :
+        return Response(
+            {
+                "error" : "Erreur lors de la modification: {e}"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+
 
 
 

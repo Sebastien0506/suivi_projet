@@ -1,0 +1,28 @@
+.pageUpdateUser {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+  }
+  
+  .updateForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 12px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 12px;
+  }
+  
+  h2 {
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
