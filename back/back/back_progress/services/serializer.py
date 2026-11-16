@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from back.back_progress.models import User
+from back.back_progress.models import User, Objective, Project
 import html
 class UserSerializer(serializers.ModelSerializer) :
     class Meta :
@@ -131,7 +131,46 @@ class UpdateUserSerializer(serializers.ModelSerializer) :
             raise serializers.ValidationError("La chaine apres le arobase contient des caractères non autorisée")
         
         return value
+
+class ObjectiveSerializer(serializers.ModelSerializer) :
+    class Meta :
+        model =  Objective
+        fields = ["title"] 
+
+    def validate_title(self, value) :
+
+        #On vérifie si les caractères sont autorisé
+        if not all(char.isalnum() or char in ["-", ".", " "] for char in value) :
+            raise serializers.ValidationError("Le nom des objectif contient des caractères interdit.")
+        return value
+
+
+
+class ProjectSerializer(serializers.ModelSerializer) :
+    objectives = ObjectiveSerializer(many=True)
+
+    class Meta :
+        model = Project
+        fields = ["title", "objectives", "project_type"]
+
+    def validate_title(self, value) :
+
+        #On vérifie si les caractères sont autorisé
+        if not all(char.isalnum() or char in ["-", ".", " ", "_"] for char in value) :
+            raise serializers.ValidationError("Le nom du projet contient des caractères interdit.")
+        
+        return value
     
+    def create(self, validated_data) :
+        objectives = validated_data.pop("objectives")
+        project = Project.objects.create(**validated_data)
+
+        for objective in objectives :
+            Objective.objects.create(
+                project=project,
+                **objective
+            )
+        return project
     
     
 

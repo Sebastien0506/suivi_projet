@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from back.back_progress.views import get_csrf, register, login, check_login, logout, me, update_user
+from back.back_progress.views import get_csrf, register, login, check_login, logout, me, update_user, createProject, get_my_project
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView
@@ -34,4 +34,6 @@ urlpatterns = [
     path('api/logout/', logout),
     path('api/me/', me),
     path('api/update_user/', update_user),
+    path('api/create_project/', createProject),
+    path('api/get_my_project/', get_my_project),
 ]

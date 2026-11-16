@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.response import Response
-from back.back_progress.models import User
-from back.back_progress.services.serializer import UserSerializer, LoginSerializer, UpdateUserSerializer
+from back.back_progress.models import User, Project
+from back.back_progress.services.serializer import UserSerializer, LoginSerializer, UpdateUserSerializer, ProjectSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework import status
@@ -297,6 +297,58 @@ def update_user(request) :
             },
             status=status.HTTP_400_BAD_REQUEST
         )
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def createProject(request) :
+
+   
+
+    serializer = ProjectSerializer(data=request.data)
+
+    #Si le serializer n'est pas valide on renvoi un message d'erreur
+    if not serializer.is_valid() :
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    #On sauvegarde le serializer
+    try :
+        serializer.save(user=request.user)
+
+        return Response(
+            {
+                "success" : "Projet crée avec succès."
+            },
+            status=status.HTTP_201_CREATED
+        )
+    except Exception as e:
+        return Response(
+            {
+                "error": f"Erreur lors de la création du projet : {e}"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_my_project(request):
+
+    # user = request.user
+
+    #On récupère les projet de l'utilisateur
+    projects = Project.objects.filter(user=request.user)
+
+    serializer = ProjectSerializer(projects, many=True)
+    print(projects)
+
+    return Response(
+        serializer.data,
+
+        status=status.HTTP_200_OK
+    )
 
 
 

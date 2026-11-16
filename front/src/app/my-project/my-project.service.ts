@@ -1,9 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
+export interface MyProject{
+  title: string;
+  objectives :[
+    {
+      title: string;
+    }
+  ]
+}
 @Injectable({
   providedIn: 'root'
 })
 export class MyProjectService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+  getMyProject(): Observable<MyProject>{
+    return this.http.get<MyProject>('api/get_my_project/', {withCredentials: true});
+  }
 }

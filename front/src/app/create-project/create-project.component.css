@@ -1,0 +1,88 @@
+
+.project-form {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 32px;
+    background: whitesmoke;
+    color: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .project-title {
+    width: 100%;
+    --mat-form-field-container-height: 64px;
+    --mat-form-field-container-vertical-padding: 20px;
+}
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .form-header > mat-icon {
+    color: #67e8f9;
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+  }
+  
+  .form-header h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: black;
+  }
+  
+  .form-header p,
+  .objectives-header p {
+    margin: 0;
+    color: black;
+    font-size: 13px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .objectives-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .objectives-header h3 {
+    margin: 0 0 6px;
+    color: black;
+  }
+  
+  .objective-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .objective-row button {
+    margin-top: 5px;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  
+  @media (max-width: 500px) {
+    .project-form {
+      padding: 20px;
+      margin: 16px;
+    }
+  }
+  
+  

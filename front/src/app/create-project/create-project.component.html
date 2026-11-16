@@ -1,0 +1,75 @@
+
+<form class="project-form" [formGroup]="projectForm" (ngSubmit)="sendeRequest()">
+
+    <div class="form-header">
+      <mat-icon>create_new_folder</mat-icon>
+  
+      <div>
+        <h2>Créer un projet</h2>
+        <p>Donnez vie à vos idées et organisez vos objectifs.</p>
+      </div>
+    </div>
+  
+    <mat-form-field appearance="outline" class="project-title">
+      <mat-label>Nom du projet</mat-label>
+      <input matInput formControlName="title"
+             placeholder="Mon application web">
+      <mat-icon matSuffix>drive_file_rename_outline</mat-icon>
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline">
+      <mat-label>Type de projet</mat-label>
+      <mat-select formControlName="project_type">
+        <mat-option value="web">Développement web</mat-option>
+        <mat-option value="video">Montage vidéo</mat-option>
+        <mat-option value="music">Création musicale</mat-option>
+        <mat-option value="design">Design graphique</mat-option>
+        <mat-option value="other">Autre</mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <div class="objectives-header">
+      <div>
+        <h3>Objectifs</h3>
+        <p>Définissez les étapes de votre projet.</p>
+      </div>
+  
+      <button mat-stroked-button type="button"
+              (click)="addObjective()">
+        <mat-icon>add</mat-icon>
+        Ajouter
+      </button>
+    </div>
+  
+    <div formArrayName="objectives">
+      @for (objective of objectives.controls; track objective; let i = $index) {
+        <div class="objective-row" [formGroupName]="i">
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Objectif {{ i + 1 }}</mat-label>
+            <input matInput formControlName="title"
+                   placeholder="Ex. Authentification">
+          </mat-form-field>
+  
+          <button mat-icon-button type="button"
+                  aria-label="Supprimer l'objectif"
+                  (click)="removeObjective(i)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+  
+        </div>
+      }
+    </div>
+  
+    <div class="form-actions">
+      <button mat-flat-button type="submit"
+              [disabled]="projectForm.invalid">
+        <mat-icon>add_circle_outline</mat-icon>
+        Créer le projet
+      </button>
+    </div>
+  
+  </form>
+  
+
+  

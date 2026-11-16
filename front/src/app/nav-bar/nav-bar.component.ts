@@ -38,7 +38,7 @@ export class NavBarComponent {
     openDialogConnexion(){
       const dialogRef = this.dialog.open(LoginComponent, { width: '400px', height:'600px'});
       dialogRef.afterClosed().subscribe(result => {
-        this.route.navigate(["/pageResetPassword"]);
+        this.route.navigate(["/myProject"]);
       })
     }
 
