@@ -1,0 +1,19 @@
+.pageProject{
+    background-color: aqua;
+    width: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.panel {
+    width: 50%;
+    margin-top: 5%;
+    display: flex;
+}
+
+mat-accordion {
+    flex: 1;
+    min-width: 0;
+}

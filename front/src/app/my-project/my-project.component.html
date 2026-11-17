@@ -1,4 +1,34 @@
 <button mat-button routerLink="/createProject">
     <mat-icon>add_box</mat-icon>
 </button>
+<div class="pageProject">
+    @for(project of myProject; track project.id){
+    
+        <div class="panel">
+            <mat-accordion>
+                <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{project.title}}</mat-panel-title>
+                        <mat-panel-description>
+                            <span>Progession du projet</span>
+                            <mat-progress-bar mode="determinate" [value]="calculateProgress(project)"></mat-progress-bar>
+                        </mat-panel-description>
+                        
+                    </mat-expansion-panel-header>
+                    @for(objective of project.objectives; track $index){
+                        
+                         <span>
+                            <mat-checkbox [checked]="objective.is_completed" (change)="updateObjective(objective, $event.checked)">{{objective.title}}</mat-checkbox>
+                         </span>
+                    }
+                   
+                </mat-expansion-panel>
+            </mat-accordion>
+            <button (click)="openDialog()" mat-button><mat-icon>border_color</mat-icon></button>
+        </div>
+        
+    
+    }
+</div>
+
 

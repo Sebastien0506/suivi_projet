@@ -135,7 +135,7 @@ class UpdateUserSerializer(serializers.ModelSerializer) :
 class ObjectiveSerializer(serializers.ModelSerializer) :
     class Meta :
         model =  Objective
-        fields = ["title"] 
+        fields = ["id", "title", "is_completed"] 
 
     def validate_title(self, value) :
 
@@ -151,7 +151,7 @@ class ProjectSerializer(serializers.ModelSerializer) :
 
     class Meta :
         model = Project
-        fields = ["title", "objectives", "project_type"]
+        fields = ["id", "title", "objectives", "project_type"]
 
     def validate_title(self, value) :
 
