@@ -31,7 +31,6 @@ class Objective(models.Model) :
     Représente un objectif appartenant à un projet.
 
     Un projet peut avoir plusieurs objectifs.
-    Chaque objectif peut contenir plusieurs tâches.
     """
     project = models.ForeignKey(
         Project,

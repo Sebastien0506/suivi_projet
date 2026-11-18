@@ -11,6 +11,7 @@ export interface MyProject{
       title: string;
       is_completed: boolean;
     }[];
+  project_type: string;
   
 }
 export interface Objective {
@@ -18,6 +19,12 @@ export interface Objective {
   title: string;
   is_completed: boolean;
 }
+
+export interface ResponseUpdateObjectif{
+  success: string;
+  
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,5 +33,9 @@ export class MyProjectService {
   constructor(private http: HttpClient) { }
   getMyProject(): Observable<MyProject[]>{
     return this.http.get<MyProject[]>('api/get_my_project/', {withCredentials: true});
+  }
+
+  sendUpdateObjectif(data: any): Observable<ResponseUpdateObjectif>{
+    return this.http.put<ResponseUpdateObjectif>('/api/update_objectif/', data, {withCredentials: true});
   }
 }

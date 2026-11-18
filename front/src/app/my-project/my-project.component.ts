@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MyProject, MyProjectService, Objective } from './my-project.service';
 import { MatExpansionModule, MatExpansionPanel, MatAccordion, MatExpansionPanelTitle, MatExpansionPanelHeader, MatExpansionPanelDescription } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-my-project',
   standalone: true,
@@ -22,11 +23,15 @@ export class MyProjectComponent {
 
   myProject: MyProject[] = [];
 
+  private snackBar = inject(MatSnackBar);
+
   readonly panelOpenState = signal(false);
   isCompleted = signal(false);
 
   //On déclare la variable pour stocker tous les objectif accompli
   objectiveAccompleted: boolean[] = [];
+
+  successMessage = signal("");
 
 
   ngOnInit(){
@@ -46,8 +51,9 @@ export class MyProjectComponent {
   }
 
   updateObjective(objective: Objective, checked: boolean){
+    //On donne a objective.is_completed la valeur true ou false
     objective.is_completed = checked;
-    console.log(objective.is_completed);
+    console.log("Objectif :", objective.is_completed);
   }
 
 
@@ -69,5 +75,34 @@ export class MyProjectComponent {
   openDialog(){
     
   }
+
+  sendRequestObjectif(projectId: number){
+    const project = this.myProject.find(p => p.id === projectId);
+    if(!project) return;
+
+        const data = {
+          objectives: project.objectives.map(objective => ({
+            id: objective.id,
+            is_completed: objective.is_completed
+          }))
+      };
+
+      this.myProjectService.sendUpdateObjectif(data).subscribe({
+        next:(res) => {
+          this.successMessage.set(res.success ?? "");
+          this.snackBar.open(
+            this.successMessage(),
+            "Fermer",
+            {
+              duration: 3000
+            }
+          )
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      })
+      console.log(data);
   
+  }
 }

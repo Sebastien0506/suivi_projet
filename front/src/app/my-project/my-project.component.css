@@ -13,6 +13,19 @@
     display: flex;
 }
 
+mat-expansion-panel-header mat-panel-description{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   gap: 5px;
+}
+
+mat-progress-bar {
+    width: 100%;
+}
+
+
+
 mat-accordion {
     flex: 1;
     min-width: 0;

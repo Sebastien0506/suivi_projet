@@ -8,11 +8,30 @@
             <mat-accordion>
                 <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
                     <mat-expansion-panel-header>
-                        <mat-panel-title>{{project.title}}</mat-panel-title>
-                        <mat-panel-description>
-                            <span>Progession du projet</span>
-                            <mat-progress-bar mode="determinate" [value]="calculateProgress(project)"></mat-progress-bar>
-                        </mat-panel-description>
+                    
+                            <mat-panel-title>@switch(project.project_type){
+                                @case('web'){
+                                    <mat-icon>code</mat-icon>
+                                }
+                                @case('music'){
+                                    <mat-icon>music_note</mat-icon>
+                                }
+                                @case('video'){
+                                    <mat-icon>movie</mat-icon>
+                                }
+                                @case('design'){
+                                    <mat-icon>palete</mat-icon>
+                                }
+                                @default {
+                                    <mat-icon>folder</mat-icon>
+                                }
+                                } {{project.title}}</mat-panel-title>
+                            <mat-panel-description>
+                                <span>Progession du projet</span>
+                                <mat-progress-bar mode="determinate" [value]="calculateProgress(project)"></mat-progress-bar>
+                            </mat-panel-description>
+                    
+                        
                         
                     </mat-expansion-panel-header>
                     @for(objective of project.objectives; track $index){
@@ -20,7 +39,9 @@
                          <span>
                             <mat-checkbox [checked]="objective.is_completed" (change)="updateObjective(objective, $event.checked)">{{objective.title}}</mat-checkbox>
                          </span>
+                         
                     }
+                    <button (click)="sendRequestObjectif(project.id)" mat-raised-button>Enregistrez les objectifs</button>
                    
                 </mat-expansion-panel>
             </mat-accordion>

@@ -5,18 +5,18 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.response import Response
-from back.back_progress.models import User, Project
-from back.back_progress.services.serializer import UserSerializer, LoginSerializer, UpdateUserSerializer, ProjectSerializer
+from back.back_progress.models import User, Project, Objective
+from back.back_progress.services.serializer import UserSerializer, LoginSerializer, UpdateUserSerializer, ProjectSerializer, ObjectiveSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from rest_framework import status
+from rest_framework import status, serializers
 from django.contrib.auth import authenticate, get_user_model
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
-
+from django.db import DatabaseError, transaction
 #On crée le jeton csrf
 @ensure_csrf_cookie
 def get_csrf(request) :
@@ -336,8 +336,6 @@ def createProject(request) :
 @permission_classes([IsAuthenticated])
 def get_my_project(request):
 
-    # user = request.user
-
     #On récupère les projet de l'utilisateur
     projects = Project.objects.filter(user=request.user)
 
@@ -349,6 +347,70 @@ def get_my_project(request):
 
         status=status.HTTP_200_OK
     )
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_objectif(request) :
+    
+    #On récupère les objective
+    objectives : list =  request.data.get("objectives")
+    if not isinstance(objectives, list) :
+        return Response(
+            {
+                "error" : "Les objectif ne sont pas une liste"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    try :
+
+        with transaction.atomic() :
+            for objectif in objectives:
+                objective = Objective.objects.filter(
+                    id=objectif["id"],
+                    project__user=request.user
+                ).first()
+
+                if objective is None :
+                    raise serializers.ValidationError("Objectif introuvable")
+
+                #On initialise le serializer
+                serializer = ObjectiveSerializer(objective, data={"is_completed": objectif["is_completed"]}, partial=True)
+
+                #On essaye de sauvegarder les données
+                
+                    #Si le serializer n'est pas valide
+                if not serializer.is_valid() :
+                    return Response(
+                        serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                serializer.save()
+
+                
+            return Response(
+                {
+                    "success" : "Modification réussi"
+                },
+                status=status.HTTP_200_OK
+            )
+    except DatabaseError :
+                return Response(
+                    {
+                        "error" : "Erreur lors de l'enregistrement"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+
+    
+
+        
+
+
+
+
+
+    
 
 
 
