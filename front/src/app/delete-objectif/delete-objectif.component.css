@@ -1,0 +1,16 @@
+.delete_objectif {
+    padding: 20px;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.confirm-delete {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
