@@ -8,6 +8,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { DeleteObjectifComponent } from '../delete-objectif/delete-objectif.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UpdateProjectService } from './update-project.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-update-project',
   standalone: true,
@@ -17,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UpdateProjectComponent {
 
-  constructor(private projectService: MyProjectService){}
+  constructor(private projectService: MyProjectService, private updateProjectService: UpdateProjectService, private router: Router){}
 
   objectives = new FormArray<FormControl<string>>([]);
 
@@ -48,15 +50,46 @@ export class UpdateProjectComponent {
     this.objectives.removeAt(index);
   }
 
+  checkInput(): boolean{
+    //On récupère les objectif dans le tableau
+    const objectifs = this.objectives.value;
+
+    //On vérifie que objectifs n'est pas un tableau vide
+    if (objectifs.length === 0 || objectifs.some(obj => obj.trim() === "")) {
+      this.message.set("Vous devez ajouter un nouvel objectif pour modifier le projet.");
+      this.snackBar.open(
+        this.message(),
+        "Fermer",
+        {
+          duration: 3000
+        }
+      );
+      console.log("Aucun nouveau objectif");
+      return false;
+    }
+    console.log("Objectif dans le tableau objectives :", objectifs);
+
+    //On crée le regex pour vérifier les titres des objectifs
+    const regexObjectif = /^[\p{L}\p{N} \.-_]+$/u;
+    
+    //Pour chaque objectif
+    for (const objectif of objectifs) {
+      //on normalize les titres des objectifs
+      const normalizeTitleObjectif = objectif.normalize("NFC");
+
+      //On vérifie que le titre de l'bjectif ne contient aucun caractère interdit
+      if(!regexObjectif.test(normalizeTitleObjectif)){
+        return false;
+      }
+       console.log("objectif :", objectif);
+
+
+    }
+    return true;
+  }
+
   removeExistingObjectif(id: number){
      
-    //  this.dialog.open(
-    //   DeleteObjectifComponent, {
-    //     data: {objectifId: id},
-    //     width: "600px",
-    //     height: "150px",
-    //   }
-    //  );
      const dialogRef = this.dialog.open(
       DeleteObjectifComponent,
       {
@@ -76,5 +109,40 @@ export class UpdateProjectComponent {
       )
      });
      
+  }
+
+  sendNewObjectif() {
+    //On récupère la fonction qui vérifie les titres des objectifs
+    const checkObjectif = this.checkInput();
+    
+    //On vérifie la fonction
+    if(!checkObjectif){
+      return;
+    }
+    console.log("Résultat de checkObjectif :", checkObjectif);
+
+    //On récupère l'id du projet
+    const project_id = this.myProject?.id;
+    console.log("id du projet : ", project_id);
+    
+    if(project_id){
+       //On crée la variable data 
+        const data = {
+          objectives: this.objectives.value.map((title: string) => ({ title })),
+        }
+        console.log("Donnée :", data);
+      //On envoi la requête
+      this.updateProjectService.updateProject(project_id, data).subscribe({
+          next: (res) => {
+            if (res.status === 200){
+              this.router.navigate(['/myProject']);
+            }
+          },
+          error: (err) => {
+            console.error("Erreur lors de la modification du projet :", err);
+          }
+      })
+    }
+    
   }
 }

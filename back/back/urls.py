@@ -37,6 +37,6 @@ urlpatterns = [
     path('api/create_project/', createProject),
     path('api/get_my_project/', get_my_project),
     path('api/update_objectif/', update_objectif),
-    path('api/update_project/', update_project),
+    path('api/update_project/<int:project_id>/', update_project),
     path('api/delete_objectif/<int:objectif_id>/', delete_objectif),
 ]

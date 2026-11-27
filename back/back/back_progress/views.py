@@ -347,7 +347,7 @@ def get_my_project(request):
 
         status=status.HTTP_200_OK
     )
-
+#SERT A MODIFIER L'ÉTAT DES OBJECTIF
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def update_objectif(request) :
@@ -400,7 +400,7 @@ def update_objectif(request) :
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
+#SERT A MODIFIER LE PROJET
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def update_project(request, project_id) :

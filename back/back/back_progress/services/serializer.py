@@ -174,6 +174,7 @@ class ProjectSerializer(serializers.ModelSerializer) :
     
     def update(self, instance, validated_data):
         objectives = validated_data.pop("objectives", [])
+        print("Données dans objectives du serializer :", objectives, flush=True)
         # project = Project.objects.update(**validated_data)
 
         instance.title = validated_data.get("title", instance.title)
@@ -184,6 +185,8 @@ class ProjectSerializer(serializers.ModelSerializer) :
                 project=instance,
                 **objective
             )
+
+        return instance
     
     
 
