@@ -1,0 +1,69 @@
+
+<div class="form-update-objectif">
+    <form class="form">
+      <div class="form-header">
+        <div class="header-icon">
+          <mat-icon>create_new_folder</mat-icon>
+        </div>
+        <h2>Modification du projet</h2>
+        <p>Gérez les objectifs et suivez l'évolution de votre projet.</p>
+      </div>
+  
+      <div class="form-section">
+        <h3>Informations du projet</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Titre du projet</mat-label>
+          <input matInput [value]="myProject?.title" readonly>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-section">
+        <h3>Objectifs existants</h3>
+  
+        @for (objectif of myProject?.objectives; track objectif.id) {
+          <div class="objectif-exists">
+            <div class="input-button">
+              <mat-form-field appearance="outline">
+                <input matInput [value]="objectif.title" readonly>
+              </mat-form-field>
+  
+              <button type="button" mat-icon-button
+                class="delete-button"
+                (click)="removeExistingObjectif(objectif.id)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+  
+      <div class="form-section">
+        <h3>Nouveaux objectifs</h3>
+  
+        @for (objectif of objectives.controls; track objectif) {
+          <div class="new-objectif">
+            <div class="input-button">
+              <mat-form-field appearance="outline">
+                <mat-label>Nouvel objectif</mat-label>
+                <input matInput [formControl]="objectif">
+              </mat-form-field>
+  
+              <button type="button" mat-icon-button
+                class="delete-button"
+                (click)="removeObjective($index)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+  
+        <button type="button" (click)="addObjective()"
+          class="add-objectif" mat-raised-button>
+          <mat-icon>add</mat-icon>
+          Ajouter un objectif
+        </button>
+      </div>
+    </form>
+  </div>
+  
+

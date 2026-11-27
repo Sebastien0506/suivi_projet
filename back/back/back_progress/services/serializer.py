@@ -172,6 +172,19 @@ class ProjectSerializer(serializers.ModelSerializer) :
             )
         return project
     
+    def update(self, instance, validated_data):
+        objectives = validated_data.pop("objectives", [])
+        # project = Project.objects.update(**validated_data)
+
+        instance.title = validated_data.get("title", instance.title)
+        instance.save()
+
+        for objective in objectives :
+            Objective.objects.create(
+                project=instance,
+                **objective
+            )
+    
     
 
 

@@ -401,6 +401,94 @@ def update_objectif(request) :
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_project(request, project_id) :
+
+    #On récupère le projet dans la db 
+    project = Project.objects.filter(
+        id=project_id,
+        user=request.user
+    ).first()
+
+    #si le projet n'existe pas 
+    if project is None :
+        return Response(
+            {
+                "error" : "Le projet n'existe pas"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try :
+
+        #On initiliase le serializer en lui passant le projet
+        serializer = ProjectSerializer(project, data=request.data, partial=True)
+        #Si le serializer n'est pas valide on renvoi un message d'erreur
+        if not serializer.is_valid() :
+            return Response(
+                {"error" : "Erreur lors e la modification"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        #Si il est valide on le sauvegarde
+        serializer.save()
+        #On retourne la réponse
+        return Response(
+            {
+                "success": "Projet modifier avec succès"
+            },
+            status=status.HTTP_200_OK
+        )
+    #On gère les exceptions
+    except Exception as e :
+        return Response(
+            {
+                "error" : f"Erreur {e}"
+            },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_objectif(request, objectif_id) :
+
+    if not objectif_id :
+        return Response(
+            {
+                "error" : "Id de l'objectif a supprimer manquant"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    #On récupère l'objectif
+    objectif = Objective.objects.filter(id=objectif_id).first()
+
+    if objectif is None :
+        return Response(
+            {
+                "error" : "Objectif introuvable"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try :
+        objectif.delete()
+
+        return Response(
+            {
+                "success" : "Suppression de l'objectif réussi."
+            },
+            status=status.HTTP_200_OK
+        )
+    
+    except Exception as e :
+        return Response(
+            {
+                "error" : f"Erreur lors de la suppression de l'objectfi: {e}"
+            },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
     
 

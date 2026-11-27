@@ -9,6 +9,7 @@ import { MatExpansionModule, MatExpansionPanel, MatAccordion, MatExpansionPanelT
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-my-project',
   standalone: true,
@@ -18,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MyProjectComponent {
 
-  constructor(private dialog: MatDialog, private myProjectService: MyProjectService){}
+  constructor(private dialog: MatDialog, private myProjectService: MyProjectService, private route: Router){}
 
 
   myProject: MyProject[] = [];
@@ -72,8 +73,14 @@ export class MyProjectComponent {
     return(objectiveAccompleted.length / project.objectives.length) * 100;
   }
  
-  openDialog(){
+ 
+
+  updateProject(project: MyProject){
     
+
+    this.myProjectService.selectedProject = project;
+    this.route.navigate(['/updateProject']);
+
   }
 
   sendRequestObjectif(projectId: number){

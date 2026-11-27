@@ -6,6 +6,7 @@ import { PageResetPasswordComponent } from './page-reset-password/page-reset-pas
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { MyProjectComponent } from './my-project/my-project.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
+import { UpdateProjectComponent } from './update-project/update-project.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent},
@@ -14,5 +15,6 @@ export const routes: Routes = [
     {path: 'pageResetPassword', component: PageResetPasswordComponent},
     {path: 'userProfile', component: UserProfileComponent},
     {path: 'myProject', component: MyProjectComponent},
-    {path: 'createProject', component: CreateProjectComponent}
+    {path: 'createProject', component: CreateProjectComponent},
+    {path: 'updateProject', component: UpdateProjectComponent},
 ];

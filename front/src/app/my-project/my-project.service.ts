@@ -30,6 +30,8 @@ export interface ResponseUpdateObjectif{
 })
 export class MyProjectService {
 
+  selectedProject: MyProject | null = null;
+
   constructor(private http: HttpClient) { }
   getMyProject(): Observable<MyProject[]>{
     return this.http.get<MyProject[]>('api/get_my_project/', {withCredentials: true});
